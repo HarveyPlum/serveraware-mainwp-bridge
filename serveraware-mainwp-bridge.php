@@ -7,7 +7,9 @@
  * Author: Harvey Plum
  * Author URI: https://harveyplum.com
  * GitHub Plugin URI: https://github.com/HarveyPlum/serveraware-mainwp-bridge
+ * Update URI: https://github.com/HarveyPlum/serveraware-mainwp-bridge
  * Primary Branch: main
+ * Release Asset: true
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * License: GPL-2.0-or-later

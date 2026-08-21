@@ -1,0 +1,31 @@
+name: Build WordPress release asset
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    env:
+      PLUGIN_DIR: serveraware-mainwp-bridge
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Build installable ZIP
+        run: |
+          repo="${GITHUB_REPOSITORY#*/}"
+          tag="${{ github.event.release.tag_name }}"
+          mkdir -p "dist/${PLUGIN_DIR}"
+          rsync -a --exclude='.git*' --exclude='.github' --exclude='dist' --exclude='tests' --exclude='SECURITY.md' ./ "dist/${PLUGIN_DIR}/"
+          cd dist
+          zip -r "${repo}-${tag}.zip" "${PLUGIN_DIR}"
+      - name: Attach ZIP to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" "dist/${GITHUB_REPOSITORY#*/}-${{ github.event.release.tag_name }}.zip" --clobber
